@@ -4,7 +4,7 @@
 
 var config = require("../config.js");
 var system = require("../system.js");
-var result = [["Request", "Black Ink Level", "Color Ink Level"]];
+var result = [["Request", "Black Ink Usage", "Color Ink Usage"]];
 
 var airvantageClient = require("../airvantageClient.js");
 var tokenManager = require("../authorization/TokenManager.js");

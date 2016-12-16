@@ -38,7 +38,10 @@ function getPersistedTokens(clientId) {
   };
 }
 
-
+/**It allows another type of authorization by request an access token using the Eesource Owner Flow Process.
+ * @method getAccessTokenFromCredentials
+ * @return {Object} AccessToken. 
+*/
 
 function getAccessTokenFromCredentials() {
     if (!config.username || !config.password) {

@@ -10,7 +10,7 @@ var apiVer = "1";
 var username = "ayman.diab@elementn.com";
 
 // OAuth 2.0 password used to request an access token using the resource owner flow
-var password = ""
+var password = "Likbakana_123"
 
 // OAuth 2.0: Authorization URI - step1 of OAuth process
 var authorizationUrl = "https://na.airvantage.net/api/oauth/authorize";
