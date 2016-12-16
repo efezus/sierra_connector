@@ -7,5 +7,14 @@ The purpose of this connector is to simplify and streamline the way you access A
 ## Components
 - airvantage/authorization/getRequestTokenUrl: This script implements steps 1 and 2 of the Airvantage OAuth Authorization Code Flow Process. It allows another type of aithorization by request an access token using the Eesource Owner Flow Process (getAccessTokenFromCredentials()).
 - airvantage/authorization/getAccessToken: This script implements step 3 of the Airvantage OAuth Authorization Code Flow Process.
-- airvantage/test/test.js: Is a sample test API that reads the latest 10 history messages representing the (blackInkPrinted and colorInkPrinted) level sent from the "AV Phone Demo" mobile application. Make sure to install the application on your mobile phone and set your account details in the config.js file.
 - airvantage/system.js: Is a library that integrates the some basic API calls to the Airvantage System.
+- airvantage/test/test.js: Is a sample test API that reads the latest 10 history messages representing the (blackInkPrinted and colorInkPrinted) level sent from the "AV Phone Demo" mobile application. Make sure to install the application on your mobile phone and set your account details in the config.js file.
+- airvantage/test/testCharts.js: Is a line chart representation of the response returned from the airvantage/test/test.js API.
+## How to use
+- Use the Import Modules feature to deploy the airvantage scripts in your scriptr account, in a folder named "modules/airvantage".
+- Sign up for an airvantage account (https://na.airvantage.net/)
+- Airvantage has [sample application](http://source.sierrawireless.com/airvantage/av/howto/gettingstarted/) to simulate any machine sending data to AirVantage; the name of this application is AV Phone. You can install the AV Phone application from your smartphone store (Google Play or Apple Store ). 
+- Install, login to the account, and run the [application](http://source.sierrawireless.com/airvantage/av/howto/gettingstarted/).
+- Start data communications from the mobile app by togglling the Send Data switch to On.
+- After couple of minuites, run the testCharts.js in order to display the (colored and black ink levels) data sent from the mobile app in a line chart.
+
