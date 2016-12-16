@@ -9,7 +9,7 @@ The purpose of this connector is to simplify and streamline the way you access A
 ## Components
 - airvantage/authorization/getRequestTokenUrl: This script implements steps 1 and 2 of the Airvantage OAuth Authorization Code Flow Process. It allows another type of aithorization by request an access token using the Resource Owner Flow Process (getAccessTokenFromCredentials()).
 - airvantage/authorization/getAccessToken: This script implements step 3 of the Airvantage OAuth Authorization Code Flow Process.
-- airvantage/system.js: Is a library that integrates the some basic API calls to the Airvantage System.
+- airvantage/system.js: Is a library that integrates some basic API calls to the Airvantage System.
 - airvantage/test/test.js: Is a sample test API that reads the latest 10 history messages representing the (blackInkPrinted and colorInkPrinted) level sent from the "AV Phone Demo" mobile application. Make sure to install the application on your mobile phone and set your account details in the config.js file.
 - airvantage/test/testCharts.js: Is a line chart representation of the response returned from the airvantage/test/test.js API.
 
@@ -19,12 +19,12 @@ The purpose of this connector is to simplify and streamline the way you access A
 - Airvantage has [sample application](http://source.sierrawireless.com/airvantage/av/howto/gettingstarted/) to simulate any machine sending data to AirVantage; the name of this application is AV Phone. You can install the AV Phone application from your smartphone store (Google Play or Apple Store ). 
 - Install, login to the account, and run the [application](http://source.sierrawireless.com/airvantage/av/howto/gettingstarted/).
 - Start data communications from the mobile app by togglling the Send Data switch to On.
-- After couple of minuites, run the testCharts.js in order to display the (colored and black ink levels) data sent from the mobile app in a line chart.
+- After couple of minutes, run the testCharts.js in order to display the (colored and black ink levels) data sent from the mobile app in a line chart.
 
-## Obtain access and refresh tokens from fitbit
-The simplest way to obtain an access tocken and a refresh tocken is by setting the username and the password of the account in the config.js file and the following function. The tockens will be set as global variable in scriptr.io and the authenticaiton will be handled automatically. 
+## Obtain access and refresh tokens from Airvantage
+The simplest way to obtain an access token and a refresh token is by setting the username and the password of the account in the config.js file and the following function. The tokens will be set as global variable in scriptr.io and the authenticaiton will be handled automatically. 
 ```
-//retrieve and set the access tocken as a global variable to be use by system.js in order to call the tokenManager.callApi() function
+//retrieve and set the access token as a global variable to be use by system.js in order to call the tokenManager.callApi() function
 var accessTokenSetResult = tokenManager.getAccessTokenFromCredentials();
 ```
 ## Use the connector
