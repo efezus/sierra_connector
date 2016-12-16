@@ -95,7 +95,7 @@ function getAccessToken(params) {
  * @return {Object} the API response. You do not need it normally. Get the tokens using getPersistedTokens()
  */
 function refreshAccessToken(clientId) {
- console.log("--------------------------------clientId  " + clientId);
+
   if (!clientId) {
     
     throw {
