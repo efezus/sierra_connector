@@ -1,6 +1,7 @@
 var config = require("./config.js");
 var http = require("http");
 var tokenMgr = require("./authorization/TokenManager.js");
+var log = require("log"); log.setLevel("info");
 
 /**
  * A generic http client that handles the communication with the AirVantage APIs
@@ -30,8 +31,8 @@ AirvantageClient.prototype.callApi = function(params) {
   try {   
      return this._callAirvantageApi(params);
   }catch(response) {
-    return response;
-    if (response.status == "401" && response.body.indexOf("expired") > -1) {
+    
+    if (response.status == "401") {
       this._refreshToken();
       try {
         return this._callAirvantageApi(params);
@@ -56,7 +57,6 @@ AirvantageClient.prototype._callAirvantageApi = function(params) {
   params["params"]["access_token"] = this.accessToken;
   
   var response = http.request(params);
-  //console.log("Received following response from fibit : " + JSON.stringify(response));
   if (response.status >= "200" && response.status < "300") {
     return JSON.parse(response.body);
   }else {
@@ -66,13 +66,14 @@ AirvantageClient.prototype._callAirvantageApi = function(params) {
 
 AirvantageClient.prototype._refreshToken = function() {
  
-  console.log("Refreshing token for " +  this.clientId);
+  log.info("airvantage/airvatangeClient: refreshing token for " +  this.clientId);
   tokenMgr.refreshAccessToken(this.clientId);
   this.accessToken = tokenMgr.getPersistedTokens(this.clientId).accessToken;
 };
   
 AirvantageClient.prototype._handleError = function(response) {
     
+  log.error("/airvantag/airvantageClient: got error in response:\n" + JSON.stringify(response));
   var errorObj = "";
   try {
 
