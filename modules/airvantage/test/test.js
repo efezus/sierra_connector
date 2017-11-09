@@ -4,37 +4,37 @@
 
 var config = require("../config.js");
 var system = require("../system.js");
-var result = [["Request", "Black Ink Usage", "Color Ink Usage"]];
 
-var airvantageClient = require("../airvantageClient.js");
-var tokenManager = require("../authorization/TokenManager.js");
+try {
 
-//retrieve and set the access tocken as a global variable to be use by system.js in order to call the tokenManager.callApi() function
-var accessTokenSetResult = tokenManager.getAccessTokenFromCredentials();
+    var airvantageClient = require("../airvantageClient.js");
+    var tokenManager = require("../authorization/TokenManager.js");
 
-//This method returns a paginated list of systems with their complete details.  
-var systemResults = system.findSystems();
+    //retrieve and set the access tocken as a global variable to be use by system.js in order to call the tokenManager.callApi() function
+    var accessTokenSetResult = tokenManager.getAccessTokenFromCredentials();
 
-//Choose the uid of the first system available
-var systemUID = systemResults.items[0].uid;
+    //This method returns a paginated list of systems with their complete details.  
+    var systemResults = system.findSystems({name: "SOME_NAME"});
 
-//Retrieve all the messages of the current system described by its systemUID
-var systemMessages = system.getSystemMessages(systemUID);
-var count = 0;
+    //Choose the uid of the first system available
+    var systemUID = systemResults.items[0].uid;
 
-//loop on all the latest 10 messages
-for(var x=systemMessages.messages.length-11; x<systemMessages.messages.length-1; x++){
-	var systemMessageUID = systemMessages.messages[x].uid;  
-  	
-  //retrieve the details of each message
-	var messageDetails = system.getSystemMessageDetails(systemUID, systemMessageUID);
-    if(messageDetails["data"] && messageDetails["data"]["phone.custom.3"] && messageDetails["data"]["phone.custom.4"]){
-      count ++;
-      //read the colored and black ink levels from the messages sent
-      var blackInkPrinted = parseInt(messageDetails["data"]["phone.custom.3"][0]["value"]);
-      var colorInkPrinted = parseInt(messageDetails["data"]["phone.custom.4"][0]["value"]);  
-      result.push([count, blackInkPrinted, colorInkPrinted]);
-    }
+    //Retrieve all the messages of the current system described by its systemUID
+    var systemMessages = system.getSystemMessages(systemUID);
+    var count = 0;
+
+    // Retrieve the last values of the system's data points
+    var lastDataPoints = system.getLastDataPoints(systemUID);
+
+    // send a command to a device
+    var operation = system.sendApplicativeCommand({systems:{uids: [systemUID]}, commandId: "open"});
+    
+    return {
+        
+        systemUID: systemUID,
+        lastDataPoints: lastDataPoints,
+        operation: operation
+    };
+}catch(exception) {
+    return exception;
 }
-//return the results as expected by the google chart set in the testCharts.js
-return result;
