@@ -1,0 +1,7 @@
+/**
+ * Default callback script invoked whenever the status of an operation changes
+ */
+
+var log =  require("log"); log.setLevel("info");
+
+log.info("/modules/airvantage/callbacks/callback: received the following update\n" + JSON.stringify(request.body));
