@@ -1,6 +1,6 @@
 // the default callback url to use when sending commands to devices
 var callback = 
-    "https://apis.scriptrapps.io/modules/airvantage/callbacks/callback?auth_token=UzIyQTgwRjc2NjpkZW1vOjdBNzhBQjIwMDBCMTk4NkQxRUMwREMzMTcyQzI4NDQz"; 
+    "https://apis.scriptrapps.io/modules/airvantage/callbacks/callback?auth_token=ADD_A_TOKEN_HERE"; 
  
 // The URL prefix to all AirVantage's APIs
 // Can be https://eu.airvantage.net/api/v1/ or https://na.airvantage.net/api/v1/. Check your subscription
