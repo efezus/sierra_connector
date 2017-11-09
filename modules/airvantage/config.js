@@ -1,4 +1,6 @@
- 
+// the default callback url to use when sending commands to devices
+var callback = 
+    "https://apis.scriptrapps.io/modules/airvantage/callbacks/callback?auth_token=UzIyQTgwRjc2NjpkZW1vOjdBNzhBQjIwMDBCMTk4NkQxRUMwREMzMTcyQzI4NDQz"; 
  
 // The URL prefix to all AirVantage's APIs
 // Can be https://eu.airvantage.net/api/v1/ or https://na.airvantage.net/api/v1/. Check your subscription
@@ -8,10 +10,10 @@ var airVantageApiUrl = "https://na.airvantage.net/api/v1/";
 var apiVer = "1";
 
 // OAuth 2.0 username used to request an access token using the resource owner flow
-var username = "ayman.diab@elementn.com";
+var username = "username@someserver.com";
 
 // OAuth 2.0 password used to request an access token using the resource owner flow
-var password = "Likbakana_123"
+var password = "some_password"
 
 // OAuth 2.0: Authorization URI - step1 of OAuth process
 var authorizationUrl = "https://na.airvantage.net/api/oauth/authorize";
