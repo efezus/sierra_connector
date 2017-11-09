@@ -1,6 +1,7 @@
  
  
 // The URL prefix to all AirVantage's APIs
+// Can be https://eu.airvantage.net/api/v1/ or https://na.airvantage.net/api/v1/. Check your subscription
 var airVantageApiUrl = "https://na.airvantage.net/api/v1/";
 
 // AirVantage API version to use
