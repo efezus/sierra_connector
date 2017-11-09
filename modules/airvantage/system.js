@@ -86,7 +86,7 @@ function getSystemMessageDetails(systemUID, messageUID){
 }
 
 /**
- * Return last data points sent by the 
+ * Return last data points sent by the given device
  * @method getLastDataPoints
  * @param {String} uid: the device's uid
  * @return { <metric> : {value:<some_value>, timestamp:<timestamp>}, <metric>:{...}. ... }
