@@ -9,10 +9,10 @@ var log = require("log"); log.setLevel("info");
  * @constructor AirvantageClient
  */
 function AirvantageClient() {
-  
-  this.clientId = "";
-  this.clientId = config.client_id;
-  this.accessToken = tokenMgr.getPersistedTokens(this.clientId).accessToken;
+
+    this.clientId = "";
+    this.clientId = config.client_id;
+    this.accessToken = tokenMgr.getPersistedTokens(this.clientId).accessToken;
 }
 
 /**
@@ -28,87 +28,70 @@ function AirvantageClient() {
  */
 AirvantageClient.prototype.callApi = function(params) {
 
-  try {   
-     return this._callAirvantageApi(params);
-  }catch(response) {
-    
-    if (response.status == "401") {
-      this._refreshToken();
-      try {
+    try {   
         return this._callAirvantageApi(params);
-      }catch(response) {
-        this._handleError(response);
-      }
-    }else {
-      this._handleError(response);
-    }    
-  }
+    }catch(response) {
+
+        if (response.status == "401") {
+            this._refreshToken();
+            try {
+                return this._callAirvantageApi(params);
+            }catch(response) {
+                this._handleError(response);
+            }
+        }else {
+            this._handleError(response);
+        }    
+    }
 };
 
 AirvantageClient.prototype._callAirvantageApi = function(params) {
-  
-  if (params.params) {
-    params.params = this._paramsToString(params.params);
-  }else{
-    params.params = this._paramsToString({});
-  }
-  
-  params["headers"] = params["headers"]  ? params["headers"] :{};
-  params["params"]["access_token"] = this.accessToken;
-  
-  var response = http.request(params);
-  if (response.status >= "200" && response.status < "300") {
-    return JSON.parse(response.body);
-  }else {
-    throw response;
-  }
+    
+    params["headers"] = params["headers"]  ? params["headers"] :{};
+    params.headers["Authorization"] = "Bearer " + this.accessToken;
+    
+    if (params.headers && params.headers["Content-Type"] && params.headers["Content-Type"] == "application/json") {
+    	
+        params.bodyString = JSON.stringify(params.params);
+        delete params.params;
+    }
+
+    log.info("/airvantage/client: sending:\n" + JSON.stringify(params));
+    var response = http.request(params);
+	log.info("/airvantage/client: received:\n" + JSON.stringify(response));
+    if (response.status >= "200" && response.status < "300") {
+        return JSON.parse(response.body);
+    }else {
+        throw response;
+    }
 };
 
 AirvantageClient.prototype._refreshToken = function() {
- 
-  log.info("airvantage/airvatangeClient: refreshing token for " +  this.clientId);
-  tokenMgr.refreshAccessToken(this.clientId);
-  this.accessToken = tokenMgr.getPersistedTokens(this.clientId).accessToken;
+
+    log.info("airvantage/airvatangeClient: refreshing token for " +  this.clientId);
+    tokenMgr.refreshAccessToken(this.clientId);
+    this.accessToken = tokenMgr.getPersistedTokens(this.clientId).accessToken;
 };
-  
+
 AirvantageClient.prototype._handleError = function(response) {
-    
-  log.error("/airvantag/airvantageClient: got error in response:\n" + JSON.stringify(response));
-  var errorObj = "";
-  try {
 
-    errorObj = JSON.parse(response.body);
-    errorObj = errorObj.errors;
-  }catch(e) {
-    
+    log.error("/airvantage/airvantageClient: got error in response:\n" + JSON.stringify(response));
+    var errorObj = "";
     try {
-      errorObj = JSON.parse(response);
+
+        errorObj = JSON.parse(response.body);
+        errorObj = errorObj.errors ? errorObj.errors : errorObj.error;
     }catch(e) {
-      errorObj = response;
-    }
-  };
 
-  throw {
-    "errorCode": "Airvantage_Invocation_Error",
-    "errorDetail": errorObj
-  };
+        try {
+            errorObj = JSON.parse(response);
+        }catch(e) {
+            errorObj = response;
+        }
+    };
+
+    throw {
+        "errorCode": "Airvantage_Invocation_Error",
+        "errorDetail": errorObj
+    };
 };
-
-/*
- * Transform all Numeric and boolean parameters to string so they can be passed to http.callApi
- * (shallow only)
- */
-AirvantageClient.prototype._paramsToString = function(params) {
-  
-  var newParams = {};
-  for (var p in params) {
-    
-    if (typeof(params[p]) != "object") {
-    	newParams[p] = "" +  params[p];
-    }else {
-      newParams[p] = params[p];
-    }
-  }
-  
-  return newParams;
-};			
