@@ -78,4 +78,4 @@ Messenger.prototype.publish = function(data, mqttConfig) {
     }
     
     return resp.result;
-}
+};
