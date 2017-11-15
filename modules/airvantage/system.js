@@ -14,18 +14,18 @@ function findSystems(filters){
     var url = config.airVantageApiUrl + "systems";
     var httpObj = {
         url: url,
-       "content-type": "application/json",
+        "content-type": "application/json",
         method: "GET",
         params: {fields: fields}
     };
 
-	if (filters) {
-        
+    if (filters) {
+
         for (var key in filters) {
             httpObj.params[key] = filters[key];
         }
     }
-	
+
     var result = airvantageClientObject.callApi(httpObj);
     return result
 }
@@ -126,15 +126,15 @@ function getLastDataPoints(uid) {
  * @throws {Error}
  */
 function sendApplicativeCommand(dto) {
-    
+
     if (!dto || !dto.commandId || !dto.systems || (!dto.systems.uids && !dto.systems.label)) {
-        
+
         throw {
             errorCode: "Invalid_Parameter",
             errorDetail: "dto.commandId and dto.systems.uids or dto.systems.label are mandatory"
         };
     }
-    
+
     dto.callback = dto.callback ? dto.callback : config.callback;
     var airvantageClientObject = new airvantageClient.AirvantageClient();
     var url = config.airVantageApiUrl + "operations/systems/command";
@@ -166,4 +166,40 @@ function getGatewayDetails(uid){
     };
     var result = airvantageClientObject.callApi(httpObj);
     return result
+}
+
+/**
+ * Publish a message of a task to a device's topic
+ * @method publish
+ * @param {Object} msg: JSON message (field:value, etc.)
+ * @param {Object} [mqsConfig]
+ * @param {String} [mqsConfig.username]: the serial number of the gateway that is bound to the device
+ * @param {String} [mqsConfig.password]: the password of the application bound to the gateway
+ * @param {String} [mqsConfig.endpoint]: optional, the endpoint of the concerned Airvantage account, e.g. eu.airvantage.com
+ * @param {String} [mqsConfig.deviceId]: the identifier of the device to publish data to
+ * @param {String} [mqsConfig.type]: the type of event ("message" or "task"). Optional, defaults to "message"
+ * @param {String} [mqsConfig.clientId]: the mqtt client id, optional, defaults to DEFAULT_CLIENT_ID
+ * @param {String} [mqsConfig.protocol]: the protocol to use (tcp, mqtts), defaults to DEFAULT_PROTOCOL
+ * @return {String} 'Success'
+ * @throws {Error}
+ */
+function publish(msg, msgConfig) {
+
+    var messenger = require("./messenger");
+    var localConfig = {
+
+        username: msgConfig.username,
+        password: msgConfig.password,
+        endpoint: msgConfig.endpoint
+    };
+
+    var mqttConfig = {
+
+        deviceId: msgConfig.deviceId,
+        type: msgConfig.type,
+        protocol: msgConfig.protocol
+    };
+
+    var messenger = new messenger.Messenger(localConfig);
+    return messenger.publish(msg, mqttConfig);
 }
