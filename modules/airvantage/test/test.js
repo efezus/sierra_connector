@@ -4,17 +4,23 @@
 
 var config = require("../config.js");
 var system = require("../system.js");
+var messenger = require("../messenger");
 
 try {
 
     var airvantageClient = require("../airvantageClient.js");
     var tokenManager = require("../authorization/TokenManager.js");
 
+    /* 
+     * API
+     */
+    
+    /*
     //retrieve and set the access tocken as a global variable to be use by system.js in order to call the tokenManager.callApi() function
     var accessTokenSetResult = tokenManager.getAccessTokenFromCredentials();
 
     //This method returns a paginated list of systems with their complete details.  
-    var systemResults = system.findSystems({name: "SOME_NAME"});
+    var systemResults = system.findSystems({name: "FE_09of20"});
 
     //Choose the uid of the first system available
     var systemUID = systemResults.items[0].uid;
@@ -35,6 +41,41 @@ try {
         lastDataPoints: lastDataPoints,
         operation: operation
     };
+    
+    */ 
+    
+    /*
+     * MQTT
+     */
+    
+    // option 1 - using the Messenger class
+    var localConfig = {
+        
+        username: "<GATEWAY_SERIAL_NUMBER>",
+        password: "<PASSWORD>",
+        endpoint: "na.airvantage.net" // check what the endpoint of your account is
+    };
+    
+    var data = {
+        
+ 		"ph": 8.5,
+        "turbidity": 56,
+        "OPR": 880
+	};
+  
+    var messenger = new messenger.Messenger(localConfig);
+    //return messenger.publish(data, {"deviceId": "353410074990189"});
+    
+    // option 2 - using the system.js module
+    var someConfig = {
+        
+        username: "<GATEWAY_SERIAL_NUMBER>",
+        password: "<PASSWORD>",
+        endpoint: "na.airvantage.net", // check what the endpoint of your account is
+        deviceId: "<DEVICE_ID>"
+    };
+    
+    return system.publish(data, someConfig);
 }catch(exception) {
     return exception;
 }
