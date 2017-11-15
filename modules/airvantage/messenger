@@ -1,0 +1,81 @@
+var mqtt = require("mqtt");
+
+const MESSAGE_TOPIC = "/messages/json";
+const TASK_TOPIC = "/tasks/json";
+const MESSAGE = "message";
+const DEFAULT_MSG_TYPE = MESSAGE;
+const TASK = "task";
+const DEFAULT_CLIENT_ID = "airvantage_connector";
+const DEFAULT_PROTOCOL = "tcp";
+const DEFAULT_ENDPOINT = "eu.airvantage.net"; 
+
+/**
+ * Publish MQTT messages (data) or tasks (commands) to an Aivantage device
+ * @class Messenger
+ * @constructor
+ * @param {Object} [config]
+ * @param {String} [config.username]: the serial number of the gateway that is bound to the device
+ * @param {String} [config.password]: the password of the application bound to the gateway
+ * @param {String} [config.endpoint]: optional, the endpoint of the concerned Airvantage account, e.g. eu.airvantage.com
+ */
+function Messenger(config) {
+    
+    if (!config || !config.username || !config.password) {
+        
+        throw {
+            errorCode: "Missing_Parameter",
+            errorDetail: "airvante/messenger: config.username and config.password cannot be null or emty"
+        };
+    }
+    
+    for (var key in config) {
+        this[key] = config[key];
+    }
+}
+
+/**
+ * Publish a message of a task to a device's topic
+ * @method publish
+ * @param {Object} mqttConfig
+ * @param {String} mqttConfig.deviceId: the identifier of the device to publish data to
+ * @param {String} mqttConfig.type: the type of event ("message" or "task"). Optional, defaults to "message"
+ * @param {String} mqttConfig.clintId: the mqtt client id, optional, defaults to DEFAULT_CLIENT_ID
+ * @param {String} mqttConfig.protocol: the protocol to use (tcp, mqtts), defaults to DEFAULT_PROTOCOL
+ * @return {String} 'Success'
+ * @throws {Error}
+ */
+Messenger.prototype.publish = function(data, mqttConfig) {
+    
+    if (!data || !mqttConfig || !mqttConfig.deviceId) {
+        
+        throw {
+            errorCode: "Missing_Parameter",
+            errorDetail: "airvante/simulator.publish: data and mqttconfig.deviceId cannot be null or emty"
+        };
+    }
+    
+    var type = mqttConfig && mqttConfig.type ? mqttConfig.type.toLowerCase() : DEFAULT_MSG_TYPE; 
+    var topic = this.username; 
+    switch(type){
+            
+        case MESSAGE: topic = topic + MESSAGE_TOPIC;break;
+        case TASK: topic = topic + TASK_TOPIC;break;
+        default: topic = topic + MESSAGE_TOPIC;
+    }
+    
+    var deviceId = mqttConfig.deviceId;
+    var msg = {};
+    msg[deviceId] = data; 
+    
+    var clientId = mqttConfig.clientId ? mqttConfig.clientId : DEFAULT_CLIENT_ID;
+    var protocol = mqttConfig.protocol ? mqttConfig.protocol : DEFAULT_PROTOCOL;
+    var endpoint = this.endpoint ? this.endpoint : DEFAULT_ENDPOINT;
+    endpoint = protocol + "://" + endpoint;
+    
+   var resp = mqtt.publish(endpoint, topic, JSON.stringify(msg), {"username": this.username, "password": this.password, "clientId": clientId});
+    if (resp.metadata.status == "failure") {
+        throw resp;
+    }
+    
+    return resp.result;
+}
