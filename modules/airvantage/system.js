@@ -172,14 +172,14 @@ function getGatewayDetails(uid){
  * Publish a message of a task to a device's topic
  * @method publish
  * @param {Object} msg: JSON message (field:value, etc.)
- * @param {Object} [mqsConfig]
- * @param {String} [mqsConfig.username]: the serial number of the gateway that is bound to the device
- * @param {String} [mqsConfig.password]: the password of the application bound to the gateway
- * @param {String} [mqsConfig.endpoint]: optional, the endpoint of the concerned Airvantage account, e.g. eu.airvantage.com
- * @param {String} [mqsConfig.deviceId]: the identifier of the device to publish data to
- * @param {String} [mqsConfig.type]: the type of event ("message" or "task"). Optional, defaults to "message"
- * @param {String} [mqsConfig.clientId]: the mqtt client id, optional, defaults to DEFAULT_CLIENT_ID
- * @param {String} [mqsConfig.protocol]: the protocol to use (tcp, mqtts), defaults to DEFAULT_PROTOCOL
+ * @param {Object} [msgConfig]
+ * @param {String} [msgConfig.username]: the serial number of the gateway that is bound to the device
+ * @param {String} [msgConfig.password]: the password of the application bound to the gateway
+ * @param {String} [msgConfig.endpoint]: optional, the endpoint of the concerned Airvantage account, e.g. eu.airvantage.com
+ * @param {String} [msgConfig.deviceId]: the identifier of the device to publish data to
+ * @param {String} [msgConfig.type]: the type of event ("message" or "task"). Optional, defaults to "message"
+ * @param {String} [msgConfig.clientId]: the mqtt client id, optional, defaults to DEFAULT_CLIENT_ID
+ * @param {String} [msgConfig.protocol]: the protocol to use (tcp, mqtts), defaults to DEFAULT_PROTOCOL
  * @return {String} 'Success'
  * @throws {Error}
  */
