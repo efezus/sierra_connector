@@ -39,7 +39,7 @@ function Messenger(config) {
  * @param {Object} mqttConfig
  * @param {String} mqttConfig.deviceId: the identifier of the device to publish data to
  * @param {String} mqttConfig.type: the type of event ("message" or "task"). Optional, defaults to "message"
- * @param {String} mqttConfig.clintId: the mqtt client id, optional, defaults to DEFAULT_CLIENT_ID
+ * @param {String} mqttConfig.clientId: the mqtt client id, optional, defaults to DEFAULT_CLIENT_ID
  * @param {String} mqttConfig.protocol: the protocol to use (tcp, mqtts), defaults to DEFAULT_PROTOCOL
  * @return {String} 'Success'
  * @throws {Error}
@@ -56,16 +56,20 @@ Messenger.prototype.publish = function(data, mqttConfig) {
     
     var type = mqttConfig && mqttConfig.type ? mqttConfig.type.toLowerCase() : DEFAULT_MSG_TYPE; 
     var topic = this.username; 
+    var msg = {};
     switch(type){
             
-        case MESSAGE: topic = topic + MESSAGE_TOPIC;break;
-        case TASK: topic = topic + TASK_TOPIC;break;
+        case MESSAGE: {
+            topic = topic + MESSAGE_TOPIC;
+            var deviceId = mqttConfig.deviceId;   
+    		msg[deviceId] = data; 
+        }break;
+        case TASK: {
+            topic = topic + TASK_TOPIC;
+            msg = data;            
+        }break;
         default: topic = topic + MESSAGE_TOPIC;
     }
-    
-    var deviceId = mqttConfig.deviceId;
-    var msg = {};
-    msg[deviceId] = data; 
     
     var clientId = mqttConfig.clientId ? mqttConfig.clientId : DEFAULT_CLIENT_ID;
     var protocol = mqttConfig.protocol ? mqttConfig.protocol : DEFAULT_PROTOCOL;
