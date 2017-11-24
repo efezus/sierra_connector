@@ -14,13 +14,13 @@ try {
     /* 
      * API
      */
-    
+
     /*
     //retrieve and set the access tocken as a global variable to be use by system.js in order to call the tokenManager.callApi() function
     var accessTokenSetResult = tokenManager.getAccessTokenFromCredentials();
 
     //This method returns a paginated list of systems with their complete details.  
-    var systemResults = system.findSystems({name: "FE_09of20"});
+    //var systemResults = system.findSystems({name: "FE_09of20"});
 
     //Choose the uid of the first system available
     var systemUID = systemResults.items[0].uid;
@@ -34,48 +34,66 @@ try {
 
     // send a command to a device
     var operation = system.sendApplicativeCommand({systems:{uids: [systemUID]}, commandId: "open"});
-    
+
     return {
-        
+
         systemUID: systemUID,
         lastDataPoints: lastDataPoints,
         operation: operation
     };
-    
+
     */ 
-    
+
+
+    //var systemResults = system.findSystems();
+    //return systemResults;
+
     /*
      * MQTT
      */
-    
+
     // option 1 - using the Messenger class
     var localConfig = {
-        
+
         username: "<GATEWAY_SERIAL_NUMBER>",
-        password: "<PASSWORD>",
-        endpoint: "na.airvantage.net" // check what the endpoint of your account is
+        password: "<APPLICATION_PASSWORD_AIRVANTAGE",
+        endpoint: "na.airvantage.net" // or eu.airvantage.net
     };
-    
+
     var data = {
-        
- 		"ph": 8.5,
-        "turbidity": 56,
-        "OPR": 880
-	};
-  
+
+        "ph": 8.5,
+        "turbidity": 66,
+        "OPR": 870
+    };
+
     var messenger = new messenger.Messenger(localConfig);
-    //return messenger.publish(data, {"deviceId": "353410074990189"});
-    
+    //return messenger.publish(data, {"deviceId": "<DEVICE_ID_OR_IMEI>"});
+
     // option 2 - using the system.js module
     var someConfig = {
-        
-        username: "<GATEWAY_SERIAL_NUMBER>",
-        password: "<PASSWORD>",
-        endpoint: "na.airvantage.net", // check what the endpoint of your account is
-        deviceId: "<DEVICE_ID>"
+
+       username: "<GATEWAY_SERIAL_NUMBER>",
+        password: "<APPLICATION_PASSWORD_AIRVANTAGE",
+        endpoint: "na.airvantage.net" // or eu.airvantage.net
+        deviceId: "<DEVICE_ID_OR_IMEI>"        
+    };
+
+    // send message
+    var sendMsgResult = system.publish(data, someConfig);
+
+    // send taks
+    var task = {
+        "write" : [{"machine.status" : "on"}]
     };
     
-    return system.publish(data, someConfig);
+    someConfig.type = "task";
+
+    var sendTaskResult = system.publish(task, someConfig); 
+    return {
+        sendMsgResult: sendMsgResult,
+        sendTaskResult: sendTaskResult
+    };
 }catch(exception) {
     return exception;
 }
